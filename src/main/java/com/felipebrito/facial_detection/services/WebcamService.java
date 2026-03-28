@@ -33,7 +33,7 @@
                     continue;
                 }
                 Mat result = faceDetectionService.detectAndDraw(frame);
-                HighGui.imshow("Facial Detection", result);
+                HighGui.imshow("Facial Detection", frame);
                 int key = HighGui.waitKey(30);
                 if(key == 27){
                     stop();

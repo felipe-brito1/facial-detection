@@ -33,6 +33,8 @@ public class FaceDetectionService {
                             rect.y + rect.height),
                             new Scalar(0, 255, 0), 2);
         }
+        Imgproc.putText(frame, "Faces: " + faces.toArray().length, new Point(10,30),
+                Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar(0, 255, 0), 2);
         return frame;
     }
 
