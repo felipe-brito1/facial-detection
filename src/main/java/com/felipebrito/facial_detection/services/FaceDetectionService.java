@@ -37,5 +37,12 @@ public class FaceDetectionService {
                 Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar(0, 255, 0), 2);
         return frame;
     }
+    public MatOfRect detectFaces(Mat mat){
+        Mat gray = new Mat();
+        Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY);
+        MatOfRect faces = new MatOfRect();
+        faceDetector.detectMultiScale(gray, faces, 1.1, 20);
+        return faces;
+    }
 
 }

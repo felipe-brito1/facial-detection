@@ -3,10 +3,7 @@ package com.felipebrito.facial_detection.controller;
 import com.felipebrito.facial_detection.models.Person;
 import com.felipebrito.facial_detection.services.PersonService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/persons")
@@ -22,5 +19,10 @@ public class PersonController {
         Person saved = personService.save(person);
         return ResponseEntity.ok(saved);
 
+    }
+    @PostMapping("/{id}/capture")
+    ResponseEntity<String> capturePhotos(@PathVariable Long id)  {
+        personService.capturePhotos(id);
+        return ResponseEntity.ok("Photos captured successfully.");
     }
 }
