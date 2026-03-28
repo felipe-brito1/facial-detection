@@ -1,11 +1,13 @@
 package com.felipebrito.facial_detection.services;
 
-import org.opencv.core.*;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
+import org.bytedeco.opencv.global.opencv_imgproc;
+import org.bytedeco.opencv.opencv_core.*;
+import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
+
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 @Service
 public class FaceDetectionService {
@@ -18,31 +20,33 @@ public class FaceDetectionService {
         }
         String path = new java.io.File(resource.toURI()).getAbsolutePath();
         this.faceDetector = new CascadeClassifier(path);
-        boolean test = faceDetector.empty();
-        if(test) {
+        if (faceDetector.empty()) {
             throw new RuntimeException("Error loading Haar Cascade");
         }
     }
-    public Mat detectAndDraw(Mat frame){
+
+    public Mat detectAndDraw(Mat frame) {
         Mat gray = new Mat();
-        Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
-        MatOfRect faces = new MatOfRect();
-        faceDetector.detectMultiScale(gray, faces, 1.1, 20);
-        for(Rect rect : faces.toArray()){
-            Imgproc.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width,
-                            rect.y + rect.height),
-                            new Scalar(0, 255, 0), 2);
+        cvtColor(frame, gray, COLOR_BGR2GRAY);
+        RectVector faces = new RectVector();
+        faceDetector.detectMultiScale(gray, faces);
+        for (int i = 0; i < faces.size(); i++) {
+            Rect rect = faces.get(i);
+            rectangle(frame,
+                    new Point(rect.x(), rect.y()),
+                    new Point(rect.x() + rect.width(), rect.y() + rect.height()),
+                    new Scalar(0, 255, 0, 0), 2, 8, 0);
         }
-        Imgproc.putText(frame, "Faces: " + faces.toArray().length, new Point(10,30),
-                Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar(0, 255, 0), 2);
+        putText(frame, "Faces: " + faces.size(), new Point(10, 30),
+                FONT_HERSHEY_SIMPLEX, 1.0, new Scalar(0, 255, 0, 0), 2, 8, false);
         return frame;
     }
-    public MatOfRect detectFaces(Mat mat){
+
+    public RectVector detectFaces(Mat mat) {
         Mat gray = new Mat();
-        Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY);
-        MatOfRect faces = new MatOfRect();
-        faceDetector.detectMultiScale(gray, faces, 1.1, 20);
+        cvtColor(mat, gray, COLOR_BGR2GRAY);
+        RectVector faces = new RectVector();
+        faceDetector.detectMultiScale(gray, faces);
         return faces;
     }
-
 }
