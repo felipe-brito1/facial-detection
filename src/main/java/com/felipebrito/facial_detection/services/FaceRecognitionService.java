@@ -1,9 +1,12 @@
 package com.felipebrito.facial_detection.services;
 
+import com.felipebrito.facial_detection.models.Person;
 import com.felipebrito.facial_detection.repository.PersonRepository;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.MatVector;
+import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_face.LBPHFaceRecognizer;
+import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,9 +21,11 @@ import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 public class FaceRecognitionService {
     private PersonRepository personRepository;
     private LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
+    private FaceDetectionService faceDetectionService;
 
-    public FaceRecognitionService(PersonRepository personRepository) {
+    public FaceRecognitionService(PersonRepository personRepository, FaceDetectionService faceDetectionService) {
         this.personRepository = personRepository;
+        this.faceDetectionService = faceDetectionService;
     }
 
     public void train() {
@@ -51,4 +56,27 @@ public class FaceRecognitionService {
         recognizer.predict(face, label, confidence);
         return label[0];
     }
+    public String recognizeFromWebcam(){
+        VideoCapture camera = new VideoCapture(0);
+        if(!camera.isOpened()){
+            throw new RuntimeException("Error! The camera was not opened.");
+        }
+        Mat frame = new Mat();
+        camera.read(frame);
+        camera.release();
+        var faces = faceDetectionService.detectFaces(frame);
+        if(faces.size() == 0){
+            throw new RuntimeException("No face detected");
+        }
+        Rect rect = faces.get(0);
+        Mat faceImage = new Mat(frame, rect);
+        Mat faceGray = new Mat();
+        org.bytedeco.opencv.global.opencv_imgproc.cvtColor(faceImage, faceGray, org.bytedeco.opencv.global.opencv_imgproc.COLOR_BGR2GRAY);
+        int id = recognize(faceGray);
+        var person = personRepository.findById((long) id)
+                .orElseThrow(() -> new RuntimeException("Person not found"));
+        return person.getName();
+    }
+
+
 }

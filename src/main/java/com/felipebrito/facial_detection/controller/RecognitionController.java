@@ -21,5 +21,12 @@ public class RecognitionController {
         return ResponseEntity.ok("Model trained sucessfully");
     }
 
+    @PostMapping("/recognize")
+    ResponseEntity<String> recognize(){
+        String name = faceRecognitionService.recognizeFromWebcam();
+        return ResponseEntity.ok("Recognized: " + name);
+
+    }
+
 
 }
