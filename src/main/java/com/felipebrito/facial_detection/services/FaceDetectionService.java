@@ -13,7 +13,7 @@ public class FaceDetectionService {
 
     public FaceDetectionService() throws URISyntaxException {
         var resource = getClass().getClassLoader().getResource("models/haarcascade_frontalface_default.xml");
-        if (resource == null){
+        if (resource == null) {
             throw new RuntimeException("Haarcascade file not found");
         }
         String path = new java.io.File(resource.toURI()).getAbsolutePath();
@@ -27,7 +27,7 @@ public class FaceDetectionService {
         Mat gray = new Mat();
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
         MatOfRect faces = new MatOfRect();
-        faceDetector.detectMultiScale(gray, faces);
+        faceDetector.detectMultiScale(gray, faces, 1.1, 20);
         for(Rect rect : faces.toArray()){
             Imgproc.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width,
                             rect.y + rect.height),
