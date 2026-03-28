@@ -4,12 +4,13 @@
     import org.opencv.core.Mat;
     import org.opencv.highgui.HighGui;
     import org.opencv.videoio.VideoCapture;
+    import org.opencv.videoio.Videoio;
     import org.springframework.stereotype.Service;
 
     @Service
     public class WebcamService {
         private FaceDetectionService faceDetectionService;
-        private VideoCapture camera;
+        private VideoCapture camera = new VideoCapture();
         private boolean running;
 
 
@@ -20,6 +21,8 @@
         public void start(){
             running = true;
             camera.open(0);
+            camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 1280);
+            camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 720);
             if(!camera.isOpened()){
                 throw new RuntimeException("Error! The camera was not opened.");
             }

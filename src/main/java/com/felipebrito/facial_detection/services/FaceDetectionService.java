@@ -5,16 +5,18 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.springframework.stereotype.Service;
 
+import java.net.URISyntaxException;
+
 @Service
 public class FaceDetectionService {
     private CascadeClassifier faceDetector;
 
-    public FaceDetectionService(){
+    public FaceDetectionService() throws URISyntaxException {
         var resource = getClass().getClassLoader().getResource("models/haarcascade_frontalface_default.xml");
         if (resource == null){
             throw new RuntimeException("Haarcascade file not found");
         }
-        String path = resource.getPath();
+        String path = new java.io.File(resource.toURI()).getAbsolutePath();
         this.faceDetector = new CascadeClassifier(path);
         boolean test = faceDetector.empty();
         if(test) {
