@@ -19,8 +19,11 @@ Crie um banco de dados no PostgreSQL:
 Configure o src/main/resources/application.properties:
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/facial_detection
+
 spring.datasource.username=seu_usuario
+
 spring.datasource.password=sua_senha
+
 spring.jpa.hibernate.ddl-auto=update
 
  Como rodar
@@ -28,6 +31,7 @@ spring.jpa.hibernate.ddl-auto=update
 git clone https://github.com/felipe-brito1/facial-detection
 
 cd facial-detection
+
 mvn spring-boot:run
 
 
