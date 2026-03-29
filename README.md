@@ -26,6 +26,7 @@ spring.jpa.hibernate.ddl-auto=update
  Como rodar
 
 git clone https://github.com/felipe-brito1/facial-detection
+
 cd facial-detection
 mvn spring-boot:run
 
