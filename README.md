@@ -56,4 +56,5 @@ POST /recognition/recognize
 5. Para visualizar a detecção em tempo real:
 
 POST /webcam/start
+
 POST /webcam/stop
