@@ -4,61 +4,61 @@ API REST para detecção e reconhecimento facial em tempo real, desenvolvida com
 
 O sistema permite cadastrar pessoas, capturar seus rostos via webcam, treinar um modelo de reconhecimento e identificar pessoas em tempo real.
 
- Tecnologias
+## Tecnologias
 
-Java 21
-Spring Boot 
-JavaCV
-PostgreSQL
-Spring Data JPA
-Maven
+- Java 21
+- Spring Boot
+- JavaCV
+- PostgreSQL
+- Spring Data JPA
+- Maven
 
-Configuração
+## Configuração
 
 Crie um banco de dados no PostgreSQL:
-Configure o src/main/resources/application.properties:
+```sql
+CREATE DATABASE facial_detection;
+```
 
+Configure o `src/main/resources/application.properties`:
+```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/facial_detection
-
 spring.datasource.username=seu_usuario
-
 spring.datasource.password=sua_senha
-
 spring.jpa.hibernate.ddl-auto=update
+```
 
- Como rodar
-
+## Como rodar
+```bash
 git clone https://github.com/felipe-brito1/facial-detection
-
 cd facial-detection
-
 mvn spring-boot:run
+```
 
+## Como usar
 
-Como usar
-
-1. Cadastre uma pessoa:
-
+**1. Cadastre uma pessoa:**
 POST /persons/
+
+No JSON:
 { "name": "SeuNome" }
 
-
-2. Capture as fotos pela webcam (fique na frente da câmera):
-
+**2. Capture as fotos pela webcam (fique na frente da câmera):**
 POST /persons/{id}/capture
 
-
-3. Treine o modelo:
-
+**3. Treine o modelo:**
 POST /recognition/train
 
-4. Reconheça o rosto:
-
+**4. Reconheça o rosto:**
 POST /recognition/recognize
 
-
-5. Para visualizar a detecção em tempo real:
+**5. Para visualizar a detecção em tempo real:**
 
 POST /webcam/start
 
 POST /webcam/stop
+
+## Documentação
+
+Com o projeto rodando, acesse a documentação interativa dos endpoints:
+http://localhost:8080/swagger-ui.html
