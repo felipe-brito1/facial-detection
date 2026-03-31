@@ -6,9 +6,13 @@ import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_core.RectVector;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imwrite;
 
@@ -16,6 +20,23 @@ import static org.bytedeco.opencv.global.opencv_imgcodecs.imwrite;
 public class PersonService {
     private PersonRepository personRepository;
     private FaceDetectionService faceDetectionService;
+
+    public List<Person> findAll(){
+        return personRepository.findAll();
+    }
+    public void delete(Long id){
+        Person person = personRepository.findById(id)
+                        .orElseThrow(()-> new RuntimeException("Person not found!"));
+        File folder = new File("dataset/" + person.getId());
+        if(folder.exists()){
+            for(File file : folder.listFiles()){
+                file.delete();
+            }
+            folder.delete();
+        }
+        personRepository.delete(person);
+
+    }
 
     public PersonService(PersonRepository personRepository, FaceDetectionService faceDetectionService) {
         this.personRepository = personRepository;

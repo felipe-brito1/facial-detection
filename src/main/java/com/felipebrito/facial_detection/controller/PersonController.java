@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
@@ -14,6 +16,21 @@ public class PersonController {
     public PersonController(PersonService personService){
         this.personService = personService;
     }
+
+    @Operation(summary = "Retorna todos os usuários")
+    @GetMapping
+    public ResponseEntity<List<Person>> findAll(){
+    List<Person> list =personService.findAll();
+    return ResponseEntity.ok().body(list);
+    }
+    @Operation(summary = "Deleta uma pessoa e suas fotos")
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete (@PathVariable Long id){
+        personService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
     @Operation(summary = "Cadastra uma nova pessoa.")
     @PostMapping("/")
